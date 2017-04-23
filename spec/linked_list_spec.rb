@@ -19,14 +19,7 @@ class LinkedList
   end
 
   def find(criteria)
-    current_element = @first_element
-
-    until current_element.match?(criteria)
-      current_element = current_element.next
-      break if current_element.nil?
-    end
-
-    current_element
+    @first_element.match(criteria)
   end
 
   class Element
@@ -34,8 +27,12 @@ class LinkedList
       @value = value
     end
 
-    def match?(criteria)
-      @value == criteria
+    def match(criteria)
+      return self if @value == criteria
+      
+      return NOT_FOUND if @next.nil?
+
+      @next.match(criteria)
     end
 
     def attach_next(element)
