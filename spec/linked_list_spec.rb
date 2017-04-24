@@ -33,6 +33,10 @@ class LinkedList
     end
   end
 
+  def to_array
+    @first_element.to_array([])
+  end
+
   class Element
     def initialize(value)
       @value = value
@@ -62,6 +66,14 @@ class LinkedList
     def attach_next(element)
       return @next.attach_next(element) if next?
       @next = element
+    end
+
+    def to_array(array) 
+      array.push(@value)
+      
+      return @next.to_array(array) if next?
+
+      array 
     end
 
     def value
@@ -137,5 +149,19 @@ describe 'linked list' do
 
 
     expect(list.find('vanesa')).to be_nil
+  end
+
+  it 'return a list of its values' do
+    list = LinkedList.new
+
+    list.add('ramon')
+    list.add('vanesa')
+    list.add('iliana')
+    list.remove('vanesa')
+    list.add('jaime')
+
+    result = list.to_array
+
+    expect(result).to eq(['ramon', 'iliana', 'jaime'])
   end
 end
