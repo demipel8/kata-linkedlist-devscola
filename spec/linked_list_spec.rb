@@ -36,7 +36,11 @@ class LinkedList
     end
 
     def attach_next(element)
-      @next = element
+      if @next.nil?
+        @next = element
+      else
+        @next.attach_next(element)
+      end
     end
 
     def next
@@ -81,8 +85,10 @@ describe 'linked list' do
 
     list.add('ramon')
     list.add('vanesa')
+    list.add('iliana')
 
     expect(list.find('ramon')).to_not be_nil
     expect(list.find('vanesa')).to_not be_nil
+    expect(list.find('iliana')).to_not be_nil
   end
 end
