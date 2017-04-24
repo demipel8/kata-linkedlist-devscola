@@ -22,34 +22,65 @@ class LinkedList
     @first_element.match(criteria)
   end
 
+  def remove(element)
+    if element == @first_element.value
+      @first_element = @first_element.next
+    else
+      removable = find(element)
+      parent = @first_element
+
+      while removable.value != parent.next.value
+        parent = parent.next
+      end
+
+      parent.set_next(removable.next)
+    end
+  end
+
   class Element
     def initialize(value)
       @value = value
+      @next = nil
     end
 
     def match(criteria)
-      return self if @value == criteria
-      
-      return NOT_FOUND if @next.nil?
-
-      @next.match(criteria)
-    end
-
-    def attach_next(element)
-      if @next.nil?
-        @next = element
+      if match?(criteria)
+        self
       else
-        @next.attach_next(element)
+        match_next(criteria)
       end
     end
 
-    def next
-      return NOT_FOUND if @next.nil?
-      @next
+    def attach_next(element)
+      return @next.attach_next(element) if next?
+      @next = element
     end
 
     def value
       @value
+    end
+
+    def next
+      @next
+    end
+
+    def set_next(new_next)
+      @next = new_next
+    end
+
+    private
+
+    def match_next(criteria)
+      return @next.match(criteria) if next?
+      NOT_FOUND
+    end
+
+    def match?(criteria)
+      @value == criteria
+    end
+
+    def next?
+      !@next.nil?
     end
   end
 end
@@ -90,5 +121,17 @@ describe 'linked list' do
     expect(list.find('ramon')).to_not be_nil
     expect(list.find('vanesa')).to_not be_nil
     expect(list.find('iliana')).to_not be_nil
+  end
+
+  it 'removes elements' do
+    list = LinkedList.new
+
+
+    list.add('ramon')
+    list.add('vanesa')
+    list.remove('vanesa')
+
+
+    expect(list.find('vanesa')).to be_nil
   end
 end
