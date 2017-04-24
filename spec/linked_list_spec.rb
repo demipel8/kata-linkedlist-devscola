@@ -23,17 +23,13 @@ class LinkedList
   end
 
   def remove(element)
-    if element == @first_element.value
+    if @first_element.match?(element)
       @first_element = @first_element.next
     else
-      removable = find(element)
-      parent = @first_element
+      parent = @first_element.parent_of(element)
+      child = parent.next
 
-      while removable.value != parent.next.value
-        parent = parent.next
-      end
-
-      parent.set_next(removable.next)
+      parent.set_next(child.next)
     end
   end
 
@@ -49,6 +45,18 @@ class LinkedList
       else
         match_next(criteria)
       end
+    end
+
+    def parent_of(child)
+      if @next.match?(child)
+        self
+      else
+        @next.parent_of(child)
+      end
+    end
+
+    def match?(criteria)
+      @value == criteria
     end
 
     def attach_next(element)
@@ -73,10 +81,6 @@ class LinkedList
     def match_next(criteria)
       return @next.match(criteria) if next?
       NOT_FOUND
-    end
-
-    def match?(criteria)
-      @value == criteria
     end
 
     def next?
